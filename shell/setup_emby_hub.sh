@@ -136,6 +136,20 @@ while true; do
     fi
 done
 
+# 输入并验证TMDB API令牌（空值时重新输入）
+echo -e "\n【TMDB配置】"
+echo "TMDB（The Movie Database）提供电影和电视剧的元数据"
+echo "需要在https://www.themoviedb.org/申请API令牌"
+echo "注意：需要的是API Read Access Token（v4 auth）"
+while true; do
+    read -p "TMDB API令牌*: " TMDB_APITOKEN
+    if [ -n "$TMDB_APITOKEN" ]; then
+        break
+    else
+        echo "TMDB API令牌不能为空，请重新输入"
+    fi
+done
+
 # 代理设置
 echo -e "\n【代理设置（可选）】"
 echo "如您的网络需要代理才能访问外部资源，请填写代理信息"
@@ -166,15 +180,15 @@ while true; do
         echo "密码不能为空，请重新输入"
         continue
     fi
-    
+
     if [ ${#DB_ROOT_PASSWORD} -lt 8 ]; then
         echo "密码长度建议至少8个字符，请设置更安全的密码"
         continue
     fi
-    
+
     read -s -p "确认MySQL root密码*: " DB_ROOT_PASSWORD_CONFIRM
     echo
-    
+
     if [ "$DB_ROOT_PASSWORD" = "$DB_ROOT_PASSWORD_CONFIRM" ]; then
         break
     else
