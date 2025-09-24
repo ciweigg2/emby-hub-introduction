@@ -140,18 +140,11 @@ done
 echo -e "\n【TMDB配置】"
 echo "TMDB（The Movie Database）提供电影和电视剧的元数据"
 echo "需要在https://www.themoviedb.org/申请API令牌"
-echo "注意：需要的是API Read Access Token（v4 auth），长度应为244个字符"
 while true; do
     read -p "TMDB API令牌*: " TMDB_APITOKEN
     if [ -z "$TMDB_APITOKEN" ]; then
         echo "TMDB API令牌不能为空，请重新输入"
         continue
-    fi
-    # 验证TMDB API令牌长度是否为244
-    if [ ${#TMDB_APITOKEN} -ne 244 ]; then
-        echo "TMDB API令牌长度不正确（当前为${#TMDB_APITOKEN}个字符），应为244个字符，请重新输入"
-    else
-        break
     fi
 done
 
