@@ -136,18 +136,6 @@ while true; do
     fi
 done
 
-# 输入并验证TMDB API令牌（空值或长度错误时重新输入）
-echo -e "\n【TMDB配置】"
-echo "TMDB（The Movie Database）提供电影和电视剧的元数据"
-echo "需要在https://www.themoviedb.org/申请API令牌"
-while true; do
-    read -p "TMDB API令牌*: " TMDB_APITOKEN
-    if [ -z "$TMDB_APITOKEN" ]; then
-        echo "TMDB API令牌不能为空，请重新输入"
-        continue
-    fi
-done
-
 # 代理设置
 echo -e "\n【代理设置（可选）】"
 echo "如您的网络需要代理才能访问外部资源，请填写代理信息"
