@@ -17,35 +17,12 @@ echo "若输入错误，可重新输入，无需重启脚本"
 echo "============================================="
 echo
 
-# 选择架构（错误时重新输入）
-echo "【架构选择】"
-echo "请根据您的设备选择对应的架构："
-echo "  - amd：适用于x86_64架构的CPU（如Intel、AMD的普通处理器）"
-echo "  - arm：适用于ARM架构的CPU（如树莓派、部分NAS设备）"
-while true; do
-    read -p "请选择架构 (amd/arm)*: " ARCH
-    ARCH=$(echo "$ARCH" | tr '[:upper:]' '[:lower:]')  # 转为小写
-    if [ "$ARCH" = "amd" ] || [ "$ARCH" = "arm" ]; then
-        break
-    else
-        echo "输入错误，请重新输入'amd'或'arm'选择架构"
-    fi
-done
-
-# 输入版本号（空值时重新输入）
-echo -e "\n【版本号设置】"
-echo "请输入需要使用的Emby Hub版本号，如1.6"
-while true; do
-    read -p "请输入Emby Hub版本号*: " EMBY_HUB_VERSION
-    if [ -n "$EMBY_HUB_VERSION" ]; then
-        break
-    else
-        echo "版本号不能为空，请重新输入"
-    fi
-done
+# 设置镜像（默认为amd64架构）
+EMBY_HUB_IMAGE="ciwei123321/emby-hub:latest"
+EMBY_HUB_WEB_IMAGE="ciwei123321/emby-hub-web:latest"
 
 # 自定义数据存储路径（默认./data，路径不可用时重新输入）
-echo -e "\n【数据存储路径】"
+echo "【数据存储路径】"
 echo "设置Emby Hub的数据存储路径，默认使用当前目录下的data文件夹"
 echo "建议选择有足够空间的位置，将存储配置、缓存和媒体信息等数据"
 while true; do
@@ -63,16 +40,7 @@ while true; do
     fi
 done
 
-# 根据架构选择基础镜像
-if [ "$ARCH" = "amd" ]; then
-    EMBY_HUB_IMAGE="ciwei123321/emby-hub:$EMBY_HUB_VERSION"
-    EMBY_HUB_WEB_IMAGE="ciwei123321/emby-hub-web:$EMBY_HUB_VERSION"
-else
-    EMBY_HUB_IMAGE="ciwei123321/emby-hub-arm:$EMBY_HUB_VERSION"
-    EMBY_HUB_WEB_IMAGE="ciwei123321/emby-hub-web-arm:$EMBY_HUB_VERSION"
-fi
-
-echo -e "\n已选择 $ARCH 架构，将使用以下镜像:"
+echo -e "\n将使用以下镜像:"
 echo "  - 主程序: $EMBY_HUB_IMAGE"
 echo "  - 网页界面: $EMBY_HUB_WEB_IMAGE"
 echo
@@ -115,7 +83,7 @@ while true; do
         echo "服务器地址不能为空，请重新输入"
         continue
     fi
-    
+
     # 简单验证格式是否包含:和端口部分
     if [[ "$EMBY_SERVER" =~ ^[^:]+:[0-9]+$ ]]; then
         break
@@ -240,8 +208,7 @@ services:
       - db
 
   db:
-    platform: linux/amd64
-    image: mysql:8.0.20
+    image: mysql:8.4.6
     container_name: mysql_container
     environment:
       MYSQL_ROOT_PASSWORD: $DB_ROOT_PASSWORD
