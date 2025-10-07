@@ -110,13 +110,16 @@ echo "TMDB（The Movie Database）提供电影和电视剧的元数据"
 echo "需要在https://www.themoviedb.org/申请API令牌"
 echo "注意：需要的是API Read Access Token（v4 auth）"
 while true; do
-    read -p "TMDB API令牌*: " TMDB_APITOKEN
+    read -p "TMDB API令牌（v4 Read Access Token）*: " TMDB_APITOKEN
     if [ -n "$TMDB_APITOKEN" ]; then
         break
     else
         echo "TMDB API令牌不能为空，请重新输入"
     fi
 done
+
+# 新增：可选的 TMDB API Key（v3）输入
+read -p "TMDB API Key（v3，可选）: " TMDB_APIKEY
 
 # 代理设置
 echo -e "\n【代理设置（可选）】"
@@ -193,6 +196,7 @@ services:
       - EMBY_URL=$EMBY_URL
       - EMBY_COPYFROMUSERID=$EMBY_COPYFROMUSERID
       - TMDB_APITOKEN=$TMDB_APITOKEN
+      - TMDB_APIKEY=$TMDB_APIKEY
       - TMDB_IMAGE_URL=https://image.tmdb.org/t/p/original
       - TZ=Asia/Shanghai
       - HTTP_PROXY_ENABLED=$HTTP_PROXY_ENABLED
