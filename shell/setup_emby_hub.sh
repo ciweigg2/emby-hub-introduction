@@ -202,7 +202,7 @@ services:
       - HTTP_PROXY_ENABLED=$HTTP_PROXY_ENABLED
       - HTTP_PROXY=$HTTP_PROXY
       - HTTPS_PROXY=$HTTPS_PROXY
-      - NO_PROXY=172.17.0.1,127.0.0.1,localhost
+      - NO_PROXY=172.17.0.1,127.0.0.1,localhost,emby-hub-search
       - LICENSE_FILE=/data/license.dat
       - EMBY_HUB_SEARCH_URL=http://emby-hub-search:8082
     networks:
