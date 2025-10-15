@@ -204,12 +204,15 @@ services:
       - HTTPS_PROXY=$HTTPS_PROXY
       - NO_PROXY=172.17.0.1,127.0.0.1,localhost
       - LICENSE_FILE=/data/license.dat
+      - EMBY_HUB_SEARCH_URL=http://emby-hub-search:8082
     networks:
       - emby-hub-network
     links:
       - db
+      - emby-hub-search
     depends_on:
       - db
+      - emby-hub-search
 
   db:
     image: mysql:8.4.6
@@ -249,6 +252,38 @@ services:
       - emby-hub
     depends_on:
       - emby-hub
+
+    emby-hub-search:
+      image: ciwei123321/emby-hub-search:latest
+      container_name: emby-hub-search
+      restart: always
+      ports:
+        - "8082:8082"
+      environment:
+        - PORT=8082
+        - CHANNELS=tgsearchers3,Aliyun_4K_Movies,bdbdndn11,yunpanx,bsbdbfjfjff,yp123pan,sbsbsnsqq,yunpanxunlei,tianyifc,BaiduCloudDisk,txtyzy,peccxinpd,gotopan,PanjClub,kkxlzy,baicaoZY,MCPH01,bdwpzhpd,ysxb48,jdjdn1111,yggpan,MCPH086,zaihuayun,Q66Share,Oscar_4Kmovies,ucwpzy,shareAliyun,alyp_1,dianyingshare,Quark_Movies,XiangxiuNBB,ydypzyfx,ucquark,xx123pan,yingshifenxiang123,zyfb123,tyypzhpd,tianyirigeng,cloudtianyi,hdhhd21,Lsp115,oneonefivewpfx,qixingzhenren,taoxgzy,Channel_Shares_115,tyysypzypd,vip115hot,wp123zy,yunpan139,yunpan189,yunpanuc,yydf_hzl,leoziyuan,pikpakpan,Q_dongman,yoyokuakeduanju
+        # 必须指定启用的插件，多个插件用逗号分隔
+        - ENABLED_PLUGINS=labi,zhizhen,shandian,duoduo,muou,wanou
+        - CACHE_ENABLED=true
+        - CACHE_PATH=/app/cache
+        - CACHE_MAX_SIZE=100
+        - CACHE_TTL=60
+        - ASYNC_PLUGIN_ENABLED=true
+        - ASYNC_RESPONSE_TIMEOUT=4
+        - ASYNC_MAX_BACKGROUND_WORKERS=20
+        - ASYNC_MAX_BACKGROUND_TASKS=100
+        - ASYNC_CACHE_TTL_HOURS=1
+        # 如果需要代理，取消下面的注释并设置代理地址
+        # - PROXY=socks5://proxy:7897
+      volumes:
+        - ./cache:/app/cache
+      networks:
+        - emby-hub-network
+      healthcheck:
+        test: [ "CMD", "wget", "-q", "--spider", "http://localhost:8082/api/health" ]
+        interval: 30s
+        timeout: 5s
+        retries: 3
 
 networks:
   emby-hub-network:
